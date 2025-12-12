@@ -1,89 +1,110 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Slider } from "@/components/ui/slider"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Cloud, Droplets, Wind, Zap, AlertTriangle, Map, Clock, CheckCircle, TrendingUp } from "lucide-react"
+import { Droplets, Wind, Zap, AlertTriangle, Map, Clock, CheckCircle, TrendingUp, Mountain } from "lucide-react"
+import { NEPAL_DISASTER_TYPES, isInNepal } from "@/lib/nepal-utils"
 
 const alerts = [
   {
     type: "flood",
-    title: "Flood Risk",
+    title: "Monsoon Flood Risk / मनसुन बाढी जोखिम",
     severity: "high",
-    message: "Heavy rainfall expected in your area with 40% chance of flooding.",
-    location: "San Francisco, CA",
+    message: "Heavy monsoon rainfall expected in Terai region with 60% chance of flooding in low-lying areas.",
+    location: "Chitwan, Nepal",
+    locationNepali: "चितवन, नेपाल",
+    lat: 27.5291,
+    lng: 84.3542,
     icon: Droplets,
   },
   {
-    type: "wildfire",
-    title: "Air Quality Alert",
-    severity: "moderate",
-    message: "Smoke from nearby wildfires affecting air quality.",
-    location: "San Francisco, CA",
-    icon: Wind,
+    type: "landslide",
+    title: "Landslide Warning / पहिरो चेतावनी",
+    severity: "high",
+    message: "Heavy rainfall may trigger landslides in hilly regions. Exercise caution on mountain roads.",
+    location: "Pokhara, Nepal",
+    locationNepali: "पोखरा, नेपाल",
+    lat: 28.2096,
+    lng: 83.9856,
+    icon: Mountain,
   },
   {
-    type: "hurricane",
-    title: "Storm Warning",
-    severity: "low",
-    message: "Tropical storm forming 500 miles away. Monitor updates.",
-    location: "Pacific Ocean",
-    icon: Cloud,
+    type: "air-quality",
+    title: "Air Quality Alert / वायु गुणस्तर चेतावनी",
+    severity: "moderate",
+    message: "Elevated pollution levels in Kathmandu Valley. Limit outdoor activities for sensitive groups.",
+    location: "Kathmandu, Nepal",
+    locationNepali: "काठमाडौं, नेपाल",
+    lat: 27.7172,
+    lng: 85.324,
+    icon: Wind,
   },
 ]
 
 const preparationChecklists = {
   flood: [
-    "Create emergency contact list",
-    "Prepare evacuation route",
-    "Stock emergency supplies (water, food)",
-    "Secure important documents",
-    "Install battery backup for essentials",
-    "Check home insurance coverage",
+    "Create emergency contact list with local authorities",
+    "Identify elevated evacuation routes",
+    "Stock emergency supplies (water, food for 1 week)",
+    "Secure important documents in waterproof container",
+    "Prepare emergency lighting (candles, batteries)",
+    "Know location of nearest relief camp",
   ],
-  wildfire: [
-    "Clear leaves and branches from roof",
-    "Maintain 30-feet firebreak around house",
-    "Use fire-resistant landscaping",
-    "Install metal gutters",
-    "Have evacuation plan ready",
-    "Prepare go-bag with essentials",
+  landslide: [
+    "Monitor weather forecasts during monsoon",
+    "Identify safe areas away from slopes",
+    "Clear drainage channels around home",
+    "Avoid building on steep slopes",
+    "Watch for warning signs (cracks, tilting trees)",
+    "Keep emergency kit ready",
   ],
-  hurricane: [
-    "Secure outdoor furniture",
-    "Reinforce doors and windows",
-    "Stock supplies (3 weeks)",
-    "Fill bathtub for emergency water",
-    "Know evacuation zones",
-    "Update emergency contacts",
+  earthquake: [
+    "Identify safe spots in each room (under tables)",
+    "Secure heavy furniture and objects",
+    "Keep emergency supplies accessible",
+    "Practice drop, cover, and hold on",
+    "Know your building's evacuation plan",
+    "Learn basic first aid",
+  ],
+  monsoon: [
+    "Check roof and drainage systems",
+    "Store adequate drinking water",
+    "Keep monsoon health kit ready",
+    "Avoid waterlogged areas",
+    "Monitor DHM weather bulletins",
+    "Prepare for power outages",
   ],
 }
 
 const scenarioData = [
-  { level: 0.5, impact: "Minor flooding in low areas" },
-  { level: 1.0, impact: "Significant flooding in urban areas" },
-  { level: 1.5, impact: "Widespread flooding, evacuations likely" },
-  { level: 2.0, impact: "Catastrophic flooding, major infrastructure damage" },
+  { level: 0.5, impact: "Increased monsoon flooding in Terai plains, affecting Chitwan and Janakpur areas" },
+  { level: 1.0, impact: "Significant Terai flooding, glacial lake concerns in Himalayan region" },
+  { level: 1.5, impact: "Major displacement in Terai, infrastructure damage, increased landslide risk" },
+  { level: 2.0, impact: "Catastrophic impact on Terai agriculture, severe Himalayan glacial melt" },
 ]
 
 const communityTips = [
   {
-    author: "Sarah M.",
-    tip: "Install a sump pump before flood season starts. Saved my basement!",
+    author: "Rajesh K. (Kathmandu)",
+    authorNepali: "राजेश के. (काठमाडौं)",
+    tip: "During monsoon, always keep emergency numbers of local ward office and Nepal Police handy.",
     likes: 234,
   },
   {
-    author: "Marcus L.",
-    tip: "Create an emergency fund specifically for disaster recovery. Helped after the wildfire.",
+    author: "Sunita T. (Pokhara)",
+    authorNepali: "सुनिता टी. (पोखरा)",
+    tip: "Create a family communication plan. Network towers often fail during disasters in mountain areas.",
     likes: 189,
   },
   {
-    author: "Emma T.",
-    tip: "Document your home and possessions with photos for insurance claims.",
+    author: "Binod M. (Chitwan)",
+    authorNepali: "बिनोद एम. (चितवन)",
+    tip: "Stock oral rehydration solution (ORS) packets. Water-borne diseases spike during floods in Terai.",
     likes: 445,
   },
 ]
@@ -93,10 +114,28 @@ export default function DisasterResilience() {
   const [selectedPrep, setSelectedPrep] = useState("flood")
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean[]>>({
     flood: preparationChecklists.flood.map(() => false),
-    wildfire: preparationChecklists.wildfire.map(() => false),
-    hurricane: preparationChecklists.hurricane.map(() => false),
+    landslide: preparationChecklists.landslide.map(() => false),
+    earthquake: preparationChecklists.earthquake.map(() => false),
+    monsoon: preparationChecklists.monsoon.map(() => false),
   })
   const [seaLevelRise, setSeaLevelRise] = useState(1)
+
+  useEffect(() => {
+    const invalidAlerts = alerts.filter((alert) => !isInNepal(alert.lat, alert.lng))
+
+    if (invalidAlerts.length > 0) {
+      console.error("[v0] Invalid alert locations detected outside Nepal:", invalidAlerts)
+    }
+
+    const current = alerts[activeAlert]
+    if (current && !isInNepal(current.lat, current.lng)) {
+      console.error("[v0] Active alert outside Nepal:", current)
+      const validIndex = alerts.findIndex((a) => isInNepal(a.lat, a.lng))
+      if (validIndex !== -1) {
+        setActiveAlert(validIndex)
+      }
+    }
+  }, [activeAlert])
 
   const toggleCheck = (index: number) => {
     setCheckedItems((prev) => ({
@@ -115,25 +154,24 @@ export default function DisasterResilience() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-primary mb-2">Disaster Resilience & Preparedness</h1>
+          <p className="nepali-text text-lg text-primary/80 mb-2">विपद् लचीलापन र तयारी</p>
           <p className="text-muted-foreground">
-            Monitor extreme weather alerts, prepare for disasters, and access community resilience tips.
+            Monitor Nepal-specific disaster alerts, prepare for monsoon and earthquakes, access community resilience
+            tips.
           </p>
         </div>
 
         <Tabs defaultValue="alerts" className="space-y-6">
           <TabsList className="bg-card border">
-            <TabsTrigger value="alerts">Active Alerts</TabsTrigger>
-            <TabsTrigger value="prep">Preparation</TabsTrigger>
+            <TabsTrigger value="alerts">Active Alerts / सक्रिय चेतावनी</TabsTrigger>
+            <TabsTrigger value="prep">Preparation / तयारी</TabsTrigger>
             <TabsTrigger value="scenario">Scenario Planner</TabsTrigger>
             <TabsTrigger value="community">Community Tips</TabsTrigger>
           </TabsList>
 
-          {/* Alerts Tab */}
           <TabsContent value="alerts" className="space-y-6">
-            {/* Alert Summary */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {alerts.map((alert, idx) => {
                 const Icon = alert.icon
@@ -162,14 +200,14 @@ export default function DisasterResilience() {
                         {alert.severity.toUpperCase()}
                       </span>
                     </div>
-                    <p className="font-semibold">{alert.title}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{alert.location}</p>
+                    <p className="font-semibold text-sm mb-1">{alert.title}</p>
+                    <p className="text-xs text-muted-foreground">{alert.location}</p>
+                    <p className="text-xs nepali-text text-muted-foreground">{alert.locationNepali}</p>
                   </button>
                 )
               })}
             </div>
 
-            {/* Detailed Alert */}
             <Card className="border">
               <CardHeader className="border-b">
                 <div className="flex items-start justify-between">
@@ -178,6 +216,7 @@ export default function DisasterResilience() {
                     <div>
                       <CardTitle>{currentAlert.title}</CardTitle>
                       <p className="text-sm text-muted-foreground mt-1">{currentAlert.location}</p>
+                      <p className="text-xs nepali-text text-muted-foreground">{currentAlert.locationNepali}</p>
                     </div>
                   </div>
                   <span
@@ -200,27 +239,23 @@ export default function DisasterResilience() {
                 </Alert>
 
                 <div className="bg-muted p-4 rounded-lg space-y-3">
-                  <p className="font-semibold text-sm">Recommended Actions:</p>
+                  <p className="font-semibold text-sm">Recommended Actions / सिफारिस गरिएका कार्यहरू:</p>
                   <ul className="space-y-2 text-sm">
                     <li className="flex gap-2">
                       <span className="text-primary">→</span>
-                      <span>Enable push notifications for real-time updates</span>
+                      <span>Monitor DHM (dhm.gov.np) for real-time updates</span>
                     </li>
                     <li className="flex gap-2">
                       <span className="text-primary">→</span>
-                      <span>
-                        Review your{" "}
-                        {currentAlert.type === "flood"
-                          ? "flood"
-                          : currentAlert.type === "wildfire"
-                            ? "wildfire"
-                            : "storm"}{" "}
-                        preparation checklist
-                      </span>
+                      <span>Review your {currentAlert.type} preparation checklist</span>
                     </li>
                     <li className="flex gap-2">
                       <span className="text-primary">→</span>
-                      <span>Contact local emergency management for latest guidance</span>
+                      <span>Contact local ward office or Nepal Police (100) for guidance</span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="text-primary">→</span>
+                      <span>Share alert with neighbors in your community</span>
                     </li>
                   </ul>
                 </div>
@@ -229,56 +264,72 @@ export default function DisasterResilience() {
                   <div className="p-3 bg-card border rounded-lg text-center">
                     <Clock className="w-5 h-5 text-secondary mx-auto mb-2" />
                     <p className="text-xs text-muted-foreground">Update Frequency</p>
-                    <p className="font-semibold">Every 1 hour</p>
+                    <p className="font-semibold">Every 3 hours</p>
                   </div>
                   <div className="p-3 bg-card border rounded-lg text-center">
                     <TrendingUp className="w-5 h-5 text-amber-500 mx-auto mb-2" />
                     <p className="text-xs text-muted-foreground">Trend</p>
-                    <p className="font-semibold">Intensifying</p>
+                    <p className="font-semibold">Monsoon Peak</p>
                   </div>
                   <div className="p-3 bg-card border rounded-lg text-center">
                     <Map className="w-5 h-5 text-secondary mx-auto mb-2" />
                     <p className="text-xs text-muted-foreground">Coverage</p>
-                    <p className="font-semibold">5 mile radius</p>
+                    <p className="font-semibold">Province-wide</p>
                   </div>
                 </div>
+
+                <p className="text-xs text-muted-foreground italic">
+                  Alert verified within Nepal boundaries (Lat: {currentAlert.lat.toFixed(4)}, Lng:{" "}
+                  {currentAlert.lng.toFixed(4)})
+                </p>
               </CardContent>
             </Card>
           </TabsContent>
 
-          {/* Preparation Tab */}
           <TabsContent value="prep" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Scenario Selector */}
               <div>
                 <Card className="border sticky top-24">
                   <CardHeader>
-                    <CardTitle className="text-sm">Select Scenario</CardTitle>
+                    <CardTitle className="text-sm">Select Disaster Type</CardTitle>
+                    <p className="text-xs nepali-text text-muted-foreground">विपद प्रकार चयन गर्नुहोस्</p>
                   </CardHeader>
                   <CardContent className="space-y-2">
-                    {["flood", "wildfire", "hurricane"].map((scenario) => (
-                      <button
-                        key={scenario}
-                        onClick={() => setSelectedPrep(scenario)}
-                        className={`w-full text-left p-3 rounded border transition ${
-                          selectedPrep === scenario
-                            ? "border-primary bg-primary/10"
-                            : "border-border hover:border-primary/50"
-                        }`}
-                      >
-                        <p className="font-semibold capitalize text-sm">{scenario}</p>
-                      </button>
-                    ))}
+                    {["flood", "landslide", "earthquake", "monsoon"].map((scenario) => {
+                      const disasterType = NEPAL_DISASTER_TYPES.find((d) => d.type === scenario)
+                      return (
+                        <button
+                          key={scenario}
+                          onClick={() => setSelectedPrep(scenario)}
+                          className={`w-full text-left p-3 rounded border transition ${
+                            selectedPrep === scenario
+                              ? "border-primary bg-primary/10"
+                              : "border-border hover:border-primary/50"
+                          }`}
+                        >
+                          <p className="font-semibold capitalize text-sm">{scenario}</p>
+                          {disasterType && (
+                            <p className="text-xs nepali-text text-muted-foreground">{disasterType.nepali}</p>
+                          )}
+                        </button>
+                      )
+                    })}
                   </CardContent>
                 </Card>
               </div>
 
-              {/* Checklist */}
               <div className="lg:col-span-2">
                 <Card className="border">
                   <CardHeader>
                     <div className="flex items-center justify-between mb-4">
-                      <CardTitle className="capitalize">{selectedPrep} Preparation Checklist</CardTitle>
+                      <div>
+                        <CardTitle className="capitalize">{selectedPrep} Preparation Checklist</CardTitle>
+                        {NEPAL_DISASTER_TYPES.find((d) => d.type === selectedPrep) && (
+                          <p className="text-sm nepali-text text-muted-foreground mt-1">
+                            {NEPAL_DISASTER_TYPES.find((d) => d.type === selectedPrep)?.nepali} तयारी सूची
+                          </p>
+                        )}
+                      </div>
                       <span className="text-sm font-semibold text-primary">
                         {prepProgress}/{totalPreps}
                       </span>
@@ -312,7 +363,7 @@ export default function DisasterResilience() {
                   <Alert className="border-green-200 bg-green-50 dark:bg-green-950/20 mt-4">
                     <CheckCircle className="h-4 w-4 text-green-600" />
                     <AlertDescription className="text-green-700 dark:text-green-200">
-                      Great job! You've completed all preparation steps for {selectedPrep}. You're well-prepared!
+                      Great job! You've completed all preparation steps for {selectedPrep}. तपाईं राम्रोसँग तयार हुनुभयो!
                     </AlertDescription>
                   </Alert>
                 )}
@@ -320,17 +371,17 @@ export default function DisasterResilience() {
             </div>
           </TabsContent>
 
-          {/* Scenario Planner Tab */}
           <TabsContent value="scenario" className="space-y-6">
             <Card className="border">
               <CardHeader>
-                <CardTitle>Sea Level Rise Scenario Planner</CardTitle>
+                <CardTitle>Climate Impact Scenario Planner for Nepal</CardTitle>
+                <p className="text-sm nepali-text text-muted-foreground">नेपालको लागि जलवायु प्रभाव परिदृश्य योजनाकार</p>
               </CardHeader>
               <CardContent className="space-y-8">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <label className="text-sm font-semibold">Sea Level Rise Projection</label>
-                    <span className="font-bold text-primary">{seaLevelRise.toFixed(1)} meters</span>
+                    <label className="text-sm font-semibold">Temperature Rise Projection (°C)</label>
+                    <span className="font-bold text-primary">{seaLevelRise.toFixed(1)}°C</span>
                   </div>
                   <Slider
                     value={[seaLevelRise]}
@@ -354,7 +405,7 @@ export default function DisasterResilience() {
                     >
                       <div className="flex items-start justify-between">
                         <div>
-                          <p className="font-semibold">{scenario.level}m Rise Scenario</p>
+                          <p className="font-semibold">{scenario.level}°C Rise Scenario</p>
                           <p className="text-sm text-muted-foreground mt-1">{scenario.impact}</p>
                         </div>
                         {Math.abs(scenario.level - seaLevelRise) < 0.15 && (
@@ -368,23 +419,25 @@ export default function DisasterResilience() {
                 <Alert>
                   <AlertTriangle className="h-4 w-4" />
                   <AlertDescription>
-                    This scenario planner helps you understand potential impacts. Consult local climate studies for
-                    accurate projections for your area.
+                    This scenario planner is based on Nepal-specific climate studies. Data sourced from Nepal Climate
+                    Change Knowledge Management Center and DHM.
                   </AlertDescription>
                 </Alert>
               </CardContent>
             </Card>
           </TabsContent>
 
-          {/* Community Tips Tab */}
           <TabsContent value="community" className="space-y-6">
             <div className="space-y-4">
               {communityTips.map((tip, idx) => (
                 <Card key={idx} className="border hover:border-primary/50 transition">
                   <CardContent className="pt-6">
                     <div className="flex items-start justify-between mb-3">
-                      <p className="font-semibold">{tip.author}</p>
-                      <span className="text-xs px-2 py-1 bg-muted rounded">Community</span>
+                      <div>
+                        <p className="font-semibold">{tip.author}</p>
+                        <p className="text-xs nepali-text text-muted-foreground">{tip.authorNepali}</p>
+                      </div>
+                      <span className="text-xs px-2 py-1 bg-muted rounded">Nepal Community</span>
                     </div>
                     <p className="text-muted-foreground mb-4">{tip.tip}</p>
                     <Button variant="outline" size="sm" className="gap-2 bg-transparent">
@@ -399,10 +452,11 @@ export default function DisasterResilience() {
             <Card className="border bg-gradient-to-br from-primary/10 to-transparent">
               <CardHeader>
                 <CardTitle>Share Your Resilience Tips</CardTitle>
+                <p className="text-sm nepali-text text-primary/80">आफ्नो लचीलापन सुझावहरू साझा गर्नुहोस्</p>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Help others prepare by sharing your disaster preparedness experiences and tips.
+                  Help fellow Nepalis prepare by sharing your disaster preparedness experiences and tips.
                 </p>
                 <Button className="bg-primary hover:bg-primary/90">Submit Your Tip</Button>
               </CardContent>

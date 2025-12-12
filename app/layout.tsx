@@ -1,18 +1,20 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Geist, Geist_Mono, Noto_Sans_Devanagari } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
+import { NepalEssentialsDashboard } from "@/components/nepal-essentials-dashboard"
 
 const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
+const _nepaliFont = Noto_Sans_Devanagari({ subsets: ["devanagari"] })
 
 export const metadata: Metadata = {
-  title: "EcoTrack Pro - Carbon Footprint & Climate Action",
+  title: "EcoTrack Nepal - कार्बन फुटप्रिन्ट र जलवायु कार्य",
   description:
-    "Track your carbon footprint, optimize data center energy use, and prepare for extreme weather with EcoTrack Pro.",
+    "Nepal-focused climate action platform. Track carbon footprint, optimize energy, and prepare for Himalayan climate challenges. नेपालमा जलवायु परिवर्तन समाधान।",
   generator: "v0.app",
   icons: {
     icon: [
@@ -44,6 +46,7 @@ export default function RootLayout({
         <Navbar />
         <main className="min-h-screen">{children}</main>
         <Footer />
+        <NepalEssentialsDashboard />
         <Analytics />
       </body>
     </html>

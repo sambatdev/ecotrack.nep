@@ -21,10 +21,10 @@ interface UserProfile {
 
 export default function Profile() {
   const [profile, setProfile] = useState<UserProfile>({
-    name: "Alexandra Johnson",
-    email: "alex.johnson@example.com",
+    name: "Rajesh Sharma",
+    email: "rajesh.sharma@example.com",
     accountType: "personal",
-    location: "San Francisco, CA",
+    location: "Kathmandu, Nepal",
   })
 
   const [editMode, setEditMode] = useState(false)
@@ -53,9 +53,11 @@ export default function Profile() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-primary mb-2">Profile & Settings</h1>
+          <h1 className="text-4xl font-bold text-primary mb-2">
+            Profile & Settings
+            <span className="block text-2xl mt-2 nepali-text text-muted-foreground">प्रोफाइल र सेटिङहरू</span>
+          </h1>
           <p className="text-muted-foreground">Manage your account, preferences, and subscription.</p>
         </div>
 
@@ -90,7 +92,10 @@ export default function Profile() {
 
             <Card className="border">
               <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>Personal Information</CardTitle>
+                <CardTitle>
+                  Personal Information
+                  <span className="block text-sm nepali-text text-muted-foreground">व्यक्तिगत जानकारी</span>
+                </CardTitle>
                 <Button
                   onClick={() => (editMode ? handleSave() : setEditMode(true))}
                   className={editMode ? "bg-primary hover:bg-primary/90" : ""}
@@ -99,7 +104,6 @@ export default function Profile() {
                 </Button>
               </CardHeader>
               <CardContent className="space-y-6">
-                {/* Profile Avatar */}
                 <div className="flex items-center gap-6 pb-6 border-b">
                   <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-2xl font-bold">
                     {profile.name.charAt(0)}
@@ -107,10 +111,11 @@ export default function Profile() {
                   {editMode && <Button variant="outline">Change Avatar</Button>}
                 </div>
 
-                {/* Form Fields */}
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-semibold mb-2">Full Name</label>
+                    <label className="block text-sm font-semibold mb-2">
+                      Full Name <span className="nepali-text text-muted-foreground">(पूरा नाम)</span>
+                    </label>
                     <Input
                       value={profile.name}
                       onChange={(e) => handleProfileChange("name", e.target.value)}
@@ -120,7 +125,9 @@ export default function Profile() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold mb-2">Email Address</label>
+                    <label className="block text-sm font-semibold mb-2">
+                      Email Address <span className="nepali-text text-muted-foreground">(इमेल ठेगाना)</span>
+                    </label>
                     <Input
                       type="email"
                       value={profile.email}
@@ -131,17 +138,35 @@ export default function Profile() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold mb-2">Location</label>
-                    <Input
-                      value={profile.location}
-                      onChange={(e) => handleProfileChange("location", e.target.value)}
-                      disabled={!editMode}
-                      className="border bg-card"
-                    />
+                    <label className="block text-sm font-semibold mb-2">
+                      Location <span className="nepali-text text-muted-foreground">(स्थान)</span>
+                    </label>
+                    {editMode ? (
+                      <Select
+                        value={profile.location}
+                        onValueChange={(value) => handleProfileChange("location", value)}
+                      >
+                        <SelectTrigger className="border bg-card">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Kathmandu, Nepal">Kathmandu (काठमाडौं)</SelectItem>
+                          <SelectItem value="Pokhara, Nepal">Pokhara (पोखरा)</SelectItem>
+                          <SelectItem value="Lalitpur, Nepal">Lalitpur (ललितपुर)</SelectItem>
+                          <SelectItem value="Bhaktapur, Nepal">Bhaktapur (भक्तपुर)</SelectItem>
+                          <SelectItem value="Chitwan, Nepal">Chitwan (चितवन)</SelectItem>
+                          <SelectItem value="Biratnagar, Nepal">Biratnagar (विराटनगर)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <Input value={profile.location} disabled className="border bg-card" />
+                    )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold mb-2">Account Type</label>
+                    <label className="block text-sm font-semibold mb-2">
+                      Account Type <span className="nepali-text text-muted-foreground">(खाता प्रकार)</span>
+                    </label>
                     <Select value={profile.accountType} disabled={!editMode}>
                       <SelectTrigger className="border bg-card">
                         <SelectValue />
@@ -179,12 +204,12 @@ export default function Profile() {
               </CardContent>
             </Card>
 
-            {/* Account Statistics */}
             <Card className="border">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <BarChart3 className="w-5 h-5 text-primary" />
                   Account Statistics
+                  <span className="text-sm nepali-text text-muted-foreground">(खाता तथ्याङ्क)</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -210,7 +235,10 @@ export default function Profile() {
           <TabsContent value="notifications" className="space-y-6">
             <Card className="border">
               <CardHeader>
-                <CardTitle>Notification Preferences</CardTitle>
+                <CardTitle>
+                  Notification Preferences
+                  <span className="block text-sm nepali-text text-muted-foreground">सूचना प्राथमिकताहरू</span>
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-4">
@@ -227,8 +255,9 @@ export default function Profile() {
                     },
                     {
                       key: "disasterAlerts",
-                      title: "Disaster Alerts",
-                      description: "Receive alerts about extreme weather and disaster risks in your area",
+                      title: "Monsoon & Disaster Alerts",
+                      description:
+                        "Receive alerts about monsoon floods, landslides, and extreme weather in Nepal regions",
                     },
                     {
                       key: "newFeatures",
@@ -267,7 +296,10 @@ export default function Profile() {
           <TabsContent value="security" className="space-y-6">
             <Card className="border">
               <CardHeader>
-                <CardTitle>Password</CardTitle>
+                <CardTitle>
+                  Password
+                  <span className="block text-sm nepali-text text-muted-foreground">पासवर्ड</span>
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
@@ -288,7 +320,10 @@ export default function Profile() {
 
             <Card className="border">
               <CardHeader>
-                <CardTitle>Two-Factor Authentication</CardTitle>
+                <CardTitle>
+                  Two-Factor Authentication
+                  <span className="block text-sm nepali-text text-muted-foreground">दुई-कारक प्रमाणीकरण</span>
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-between mb-4 p-4 bg-muted rounded-lg">
@@ -334,17 +369,19 @@ export default function Profile() {
             </Card>
           </TabsContent>
 
-          {/* Subscription Tab */}
           <TabsContent value="subscription" className="space-y-6">
             <Card className="border">
               <CardHeader>
-                <CardTitle>Current Plan</CardTitle>
+                <CardTitle>
+                  Current Plan
+                  <span className="block text-sm nepali-text text-muted-foreground">हालको योजना</span>
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="bg-gradient-to-br from-primary/10 to-transparent p-6 rounded-lg border border-primary/20 mb-6">
                   <p className="text-sm text-muted-foreground mb-1">Active Plan</p>
                   <p className="text-3xl font-bold text-primary mb-2">Pro Plan</p>
-                  <p className="text-sm text-muted-foreground mb-4">$29/month • Renews on May 15, 2025</p>
+                  <p className="text-sm text-muted-foreground mb-4">NPR 3,500/month • Renews on May 15, 2025</p>
                   <Button className="bg-primary hover:bg-primary/90">Manage Billing</Button>
                 </div>
               </CardContent>
@@ -359,10 +396,10 @@ export default function Profile() {
                   {[
                     "Unlimited carbon tracking logs",
                     "Advanced data center optimization",
-                    "Priority disaster alerts",
+                    "Priority monsoon & disaster alerts",
                     "Export reports as PDF/CSV",
                     "Team collaboration (up to 5 users)",
-                    "API access",
+                    "API access for Nepal data",
                   ].map((feature, idx) => (
                     <div key={idx} className="flex items-center gap-3">
                       <Check className="w-5 h-5 text-primary" />
@@ -379,7 +416,7 @@ export default function Profile() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-muted-foreground">
-                  Get unlimited everything, dedicated support, custom integrations, and more.
+                  Get unlimited everything, dedicated support, custom integrations, and Nepal-specific features.
                 </p>
                 <Button variant="outline">Contact Sales</Button>
               </CardContent>
@@ -387,7 +424,6 @@ export default function Profile() {
           </TabsContent>
         </Tabs>
 
-        {/* Logout */}
         <div className="mt-8 pt-6 border-t">
           <Button
             variant="outline"

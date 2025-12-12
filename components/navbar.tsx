@@ -3,20 +3,21 @@
 import Link from "next/link"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Menu, X, Leaf, ChevronDown } from "lucide-react"
+import { Menu, X, Mountain, ChevronDown, Globe } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [language, setLanguage] = useState<"en" | "ne">("en")
 
   return (
     <nav className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
           <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary">
-            <Leaf className="w-6 h-6" />
-            <span>EcoTrack Pro</span>
+            <Mountain className="w-6 h-6" />
+            <span>EcoTrack Nepal</span>
+            <span className="text-sm nepali-text text-muted-foreground">इकोट्र्याक नेपाल</span>
           </Link>
 
           {/* Desktop Menu */}
@@ -30,6 +31,9 @@ export default function Navbar() {
             <Link href="/data-center-optimizer" className="text-sm font-medium hover:text-primary transition">
               Optimizer
             </Link>
+            <Link href="/alerts" className="text-sm font-medium hover:text-primary transition">
+              Alerts
+            </Link>
             <Link href="/disaster-resilience" className="text-sm font-medium hover:text-primary transition">
               Resilience
             </Link>
@@ -38,8 +42,19 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Right Side - Desktop */}
           <div className="hidden md:flex items-center gap-4">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <Globe className="w-4 h-4 mr-2" />
+                  {language === "en" ? "English" : "नेपाली"}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setLanguage("en")}>English</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setLanguage("ne")}>नेपाली (Nepali)</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm">
@@ -73,6 +88,9 @@ export default function Navbar() {
             </Link>
             <Link href="/data-center-optimizer" className="block px-4 py-2 hover:bg-muted rounded">
               Optimizer
+            </Link>
+            <Link href="/alerts" className="block px-4 py-2 hover:bg-muted rounded">
+              Alerts
             </Link>
             <Link href="/disaster-resilience" className="block px-4 py-2 hover:bg-muted rounded">
               Resilience

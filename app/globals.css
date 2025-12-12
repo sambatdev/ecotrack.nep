@@ -3,117 +3,51 @@
 
 @custom-variant dark (&:is(.dark *));
 
-:root {
-  /* Eco-themed color palette with greens, blues, and neutrals */
-  --background: oklch(0.98 0 0);
-  --foreground: oklch(0.15 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.15 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0 0);
-  --primary: oklch(0.47 0.22 142.5); /* Vibrant green */
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.52 0.2 255); /* Blue accent */
-  --secondary-foreground: oklch(1 0 0);
-  --muted: oklch(0.92 0 0);
-  --muted-foreground: oklch(0.5 0 0);
-  --accent: oklch(0.52 0.2 142.5); /* Teal accent */
-  --accent-foreground: oklch(1 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.92 0 0);
-  --input: oklch(0.95 0 0);
-  --ring: oklch(0.47 0.22 142.5);
-  --chart-1: oklch(0.47 0.22 142.5); /* Green */
-  --chart-2: oklch(0.52 0.2 255); /* Blue */
-  --chart-3: oklch(0.52 0.2 142.5); /* Teal */
-  --chart-4: oklch(0.65 0.18 142.5); /* Light green */
-  --chart-5: oklch(0.6 0.15 255); /* Light blue */
-  --radius: 0.625rem;
-  --sidebar: oklch(0.98 0 0);
-  --sidebar-foreground: oklch(0.15 0 0);
-  --sidebar-primary: oklch(0.47 0.22 142.5);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.92 0 0);
-  --sidebar-accent-foreground: oklch(0.47 0.22 142.5);
-  --sidebar-border: oklch(0.92 0 0);
-  --sidebar-ring: oklch(0.47 0.22 142.5);
-}
-
-.dark {
-  --background: oklch(0.12 0 0);
-  --foreground: oklch(0.95 0 0);
-  --card: oklch(0.16 0 0);
-  --card-foreground: oklch(0.95 0 0);
-  --popover: oklch(0.12 0 0);
-  --popover-foreground: oklch(0.95 0 0);
-  --primary: oklch(0.52 0.25 142.5); /* Vibrant green for dark */
-  --primary-foreground: oklch(0.12 0 0);
-  --secondary: oklch(0.58 0.22 255); /* Blue accent for dark */
-  --secondary-foreground: oklch(0.12 0 0);
-  --muted: oklch(0.28 0 0);
-  --muted-foreground: oklch(0.7 0 0);
-  --accent: oklch(0.58 0.22 142.5); /* Teal for dark */
-  --accent-foreground: oklch(0.12 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.28 0 0);
-  --input: oklch(0.22 0 0);
-  --ring: oklch(0.52 0.25 142.5);
-  --chart-1: oklch(0.52 0.25 142.5);
-  --chart-2: oklch(0.58 0.22 255);
-  --chart-3: oklch(0.58 0.22 142.5);
-  --chart-4: oklch(0.65 0.2 142.5);
-  --chart-5: oklch(0.6 0.18 255);
-  --sidebar: oklch(0.15 0 0);
-  --sidebar-foreground: oklch(0.95 0 0);
-  --sidebar-primary: oklch(0.52 0.25 142.5);
-  --sidebar-primary-foreground: oklch(0.95 0 0);
-  --sidebar-accent: oklch(0.28 0 0);
-  --sidebar-accent-foreground: oklch(0.52 0.25 142.5);
-  --sidebar-border: oklch(0.28 0 0);
-  --sidebar-ring: oklch(0.52 0.25 142.5);
-}
-
 @theme inline {
+  /* Nepal-themed color palette using Nepali flag colors (crimson red and blue) */
+  /* Light mode colors */
   --font-sans: "Geist", "Geist Fallback";
   --font-mono: "Geist Mono", "Geist Mono Fallback";
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+  /* Adding Noto Sans Devanagari for Nepali text support */
+  --font-nepali: "Noto Sans Devanagari", "Geist", "Geist Fallback";
+
+  --color-background: oklch(0.98 0 0);
+  --color-foreground: oklch(0.15 0 0);
+  --color-card: oklch(1 0 0);
+  --color-card-foreground: oklch(0.15 0 0);
+  --color-popover: oklch(1 0 0);
+  --color-popover-foreground: oklch(0.15 0 0);
+  --color-primary: oklch(0.48 0.21 25); /* Crimson red from Nepali flag */
+  --color-primary-foreground: oklch(1 0 0);
+  --color-secondary: oklch(0.45 0.18 265); /* Deep blue from Nepali flag */
+  --color-secondary-foreground: oklch(1 0 0);
+  --color-muted: oklch(0.92 0 0);
+  --color-muted-foreground: oklch(0.5 0 0);
+  --color-accent: oklch(0.52 0.18 142.5); /* Himalayan green accent */
+  --color-accent-foreground: oklch(1 0 0);
+  --color-destructive: oklch(0.577 0.245 27.325);
+  --color-destructive-foreground: oklch(0.577 0.245 27.325);
+  --color-border: oklch(0.92 0 0);
+  --color-input: oklch(0.95 0 0);
+  --color-ring: oklch(0.48 0.21 25);
+  --color-chart-1: oklch(0.48 0.21 25); /* Crimson red */
+  --color-chart-2: oklch(0.45 0.18 265); /* Deep blue */
+  --color-chart-3: oklch(0.52 0.18 142.5); /* Himalayan green */
+  --color-chart-4: oklch(0.65 0.15 25); /* Light crimson */
+  --color-chart-5: oklch(0.6 0.15 265); /* Light blue */
+  --color-sidebar: oklch(0.98 0 0);
+  --color-sidebar-foreground: oklch(0.15 0 0);
+  --color-sidebar-primary: oklch(0.48 0.21 25);
+  --color-sidebar-primary-foreground: oklch(1 0 0);
+  --color-sidebar-accent: oklch(0.92 0 0);
+  --color-sidebar-accent-foreground: oklch(0.48 0.21 25);
+  --color-sidebar-border: oklch(0.92 0 0);
+  --color-sidebar-ring: oklch(0.48 0.21 25);
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.625rem;
+  --radius-xl: 0.875rem;
 }
 
 @layer base {
@@ -122,5 +56,45 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  /* Adding Nepali text class for bilingual support */
+  .nepali-text {
+    font-family: "Noto Sans Devanagari", "Geist", "Geist Fallback";
+  }
+
+  /* Dark mode overrides */
+  .dark {
+    --color-background: oklch(0.12 0 0);
+    --color-foreground: oklch(0.95 0 0);
+    --color-card: oklch(0.16 0 0);
+    --color-card-foreground: oklch(0.95 0 0);
+    --color-popover: oklch(0.12 0 0);
+    --color-popover-foreground: oklch(0.95 0 0);
+    --color-primary: oklch(0.55 0.23 25); /* Brighter crimson for dark mode */
+    --color-primary-foreground: oklch(0.12 0 0);
+    --color-secondary: oklch(0.52 0.2 265); /* Brighter blue for dark mode */
+    --color-secondary-foreground: oklch(0.12 0 0);
+    --color-muted: oklch(0.28 0 0);
+    --color-muted-foreground: oklch(0.7 0 0);
+    --color-accent: oklch(0.58 0.2 142.5); /* Brighter green for dark */
+    --color-accent-foreground: oklch(0.12 0 0);
+    --color-destructive: oklch(0.396 0.141 25.723);
+    --color-destructive-foreground: oklch(0.637 0.237 25.331);
+    --color-border: oklch(0.28 0 0);
+    --color-input: oklch(0.22 0 0);
+    --color-ring: oklch(0.55 0.23 25);
+    --color-chart-1: oklch(0.55 0.23 25);
+    --color-chart-2: oklch(0.52 0.2 265);
+    --color-chart-3: oklch(0.58 0.2 142.5);
+    --color-chart-4: oklch(0.65 0.18 25);
+    --color-chart-5: oklch(0.6 0.18 265);
+    --color-sidebar: oklch(0.15 0 0);
+    --color-sidebar-foreground: oklch(0.95 0 0);
+    --color-sidebar-primary: oklch(0.55 0.23 25);
+    --color-sidebar-primary-foreground: oklch(0.95 0 0);
+    --color-sidebar-accent: oklch(0.28 0 0);
+    --color-sidebar-accent-foreground: oklch(0.55 0.23 25);
+    --color-sidebar-border: oklch(0.28 0 0);
+    --color-sidebar-ring: oklch(0.55 0.23 25);
   }
 }
